@@ -1,0 +1,5 @@
+raytracer
+*.o
+*.png
+.hgignore
+.DS_Store
