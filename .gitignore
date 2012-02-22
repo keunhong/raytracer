@@ -3,3 +3,4 @@ raytracer
 *.png
 .hgignore
 .DS_Store
+*.out
