@@ -24,10 +24,29 @@ double Vec3::operator*(const Vec3& r) const{
     return dot(r);
 }
 
+// Scalar operators
 Vec3 Vec3::operator*(double s) const{
     return Vec3(s*x, s*y, s*z);
 }
+Vec3 operator*(double s, const Vec3& v){
+    return Vec3(s*v.x, s*v.y, s*v.z);
+}
 
+Vec3 Vec3::operator+(double s) const{
+    return Vec3(s+x, s+y, s+z);
+}
+Vec3 operator+(double s, const Vec3& v){
+    return Vec3(s+v.x, s+v.y, s+v.z);
+}
+
+Vec3 Vec3::operator-(double s) const{
+    return Vec3(x-s, y-s, z-s);
+}
+
+
+
+
+// Vector operators
 Vec3 Vec3::operator+(const Vec3& r) const{
     return Vec3(x+r.x, y+r.y, z+r.z);
 }
@@ -47,6 +66,4 @@ std::ostream& operator<<(std::ostream& os, const Vec3& v){
 }
 
 
-Vec3 operator*(double s, const Vec3& v){
-    return Vec3(s*v.x, s*v.y, s*v.z);
-}
+

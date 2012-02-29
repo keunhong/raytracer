@@ -101,7 +101,7 @@ Trace Camera::trace_ray(const Ray &ray, double rho, unsigned int depth) const{
     // Prune
     if(rho < MIN_ALBEDO){
         //cout << "Pruning trace tree since albedo is negligible." << rho << endl;
-        return Trace(Color::BLACK, TRACE_EMPTY, NULL);
+        return Trace(Color::MAGENTA, TRACE_EMPTY, NULL);
     }
 
     Intersection intersection = find_nearest_intersection(ray);
@@ -178,17 +178,15 @@ Trace Camera::trace_ray(const Ray &ray, double rho, unsigned int depth) const{
      */
 
     Color transmitted_intensity;
-    double cos_t1 = intersection.normal.dot(-ray.direction);
-    double n1, n2;
+    Vec3 normal = intersection.result * intersection.normal;
+    double cos_t1 = -normal.dot(ray.direction);
+    double n1 = 1.0;
+    double n2 = material->n;
     if(intersection.result == 1){
-        n1 = 1.0;
-        n2 = material->n;
     }else{
         cout << "Derp" << endl;
-        n1 = material->n;
-        n2 = 1.0;
     }
-    double cos_t2_sq = 1 - pow(n1/n2,2) * pow(1-cos_t1,2);
+    double cos_t2_sq = 1.0 - pow(n1/n2,2) * pow(1-cos_t1,2);
     if(cos_t2_sq > 0){
         // cos(t)^2
         double cos_t2 = sqrt(cos_t2_sq);
@@ -197,7 +195,8 @@ Trace Camera::trace_ray(const Ray &ray, double rho, unsigned int depth) const{
         Vec3 v_refract = (n1/n2)*ray.direction + (n1/n2*cos_t1 - cos_t2)*intersection.normal;
 
         // Create ray
-        Ray transmitted_ray(intersection.position, v_refract, intersection.primitive);
+        Ray transmitted_ray(intersection.position, v_refract, intersection.primitive, (intersection.result == 1)?TRANSMITTED:ORIGINAL);
+        //Ray transmitted_ray(intersection.position, v_refract, intersection.primitive);
 
         Trace transmitted_trace = trace_ray(transmitted_ray, rho * material->rho_t, depth+1);
 
@@ -225,6 +224,7 @@ Trace Camera::trace_ray(const Ray &ray, double rho, unsigned int depth) const{
  * @param  exclude an primitive to exclude from the check
  * @return an intersection
  */
+#define MIN_DIST 0.000001
 Intersection Camera::find_nearest_intersection(const Ray& ray) const{
     double min_t = DBL_MAX;
     Intersection nearest_intersection;
@@ -240,7 +240,8 @@ Intersection Camera::find_nearest_intersection(const Ray& ray) const{
 
         // Does not intersect
         //if(sect.result <= 0){
-        if(sect.t <= 0){
+        if(sect.t <= MIN_DIST){
+        //if(sect.t <= 0){
             continue;
         }
 

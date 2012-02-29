@@ -14,7 +14,11 @@ class Vec3{
     double operator*(const Vec3& r) const;
     double length() const;
     Vec3 operator*(double s) const;
+    Vec3 operator+(double s) const;
+    Vec3 operator-(double s) const;
     friend Vec3 operator*(double s, const Vec3 &v);
+    friend Vec3 operator+(double s, const Vec3 &v);
+    friend Vec3 operator-(double s, const Vec3 &v);
     Vec3 operator+(const Vec3& r) const;
     Vec3 operator-(const Vec3& r) const;
     Vec3 operator-() const;
