@@ -7,6 +7,10 @@ Plane::Plane(Vec3 n, Vec3 r0_, Material *m) : Primitive(){
     this->material = m;
 };
 
+Vec3 Plane::get_position() const{
+    return this->r0;
+}
+
 Intersection Plane::intersect(const Ray& ray){
     Vec3 p = ray.origin;
     Vec3 v = ray.direction;

@@ -17,6 +17,7 @@ class Sphere : public Primitive{
     Sphere();
     Sphere(Vec3 center, double radius, Material *material);
     virtual Intersection intersect(const Ray& ray);
+    virtual Vec3 get_position() const;
 };
 
 

@@ -42,6 +42,15 @@ Color Color::operator/(double s) const{
     return Color(r/s, g/s, b/s, 1.0);
 }
 
+bool Color::operator==(const Color& c) const{
+    return c.r == r && c.b == b && c.g == g;
+}
+
+
+bool Color::operator!=(const Color& c) const{
+    return c.r != r || c.b != b || c.g != g;
+}
+
 
 std::ostream& operator<<(std::ostream& os, const Color& c){
     os << "rgb(" <<  c.r << ", " << c.g <<", " << c.b << ")";

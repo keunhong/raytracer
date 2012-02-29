@@ -15,6 +15,8 @@ class Color{
     Color operator*(const Color& right) const;
     Color operator*(double s) const;
     Color operator/(double s) const;
+    bool operator==(const Color& c) const;
+    bool operator!=(const Color& c) const;
 
     friend std::ostream& operator<<(std::ostream& os, const Color& c);
 

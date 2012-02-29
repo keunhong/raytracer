@@ -22,6 +22,7 @@ class Plane : public Primitive{
     Plane();
     Plane(Vec3 n, Vec3 r0_, Material *m);
     virtual Intersection intersect(const Ray& ray);
+    virtual Vec3 get_position() const;
 };
 
 #endif

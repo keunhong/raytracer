@@ -5,6 +5,7 @@
 #include <cfloat>
 #include "sphere.hpp"
 #include "plane.hpp"
+#include "rectangle.hpp"
 #include "luminaire.hpp"
 #include "color.hpp"
 #include "vec3.hpp"
@@ -16,7 +17,7 @@ class Scene{
 
   private:
     vector<Primitive*> primitives;
-    vector<Luminaire*> luminaires;
+    vector<Primitive*> luminaires;
     double scale;
 
   public:
@@ -25,7 +26,8 @@ class Scene{
     ~Scene();
     Sphere *create_sphere(Vec3 position, double radius, Material *material);
     Plane *create_plane(Vec3 n, Vec3 r0, Material *material);
-    Luminaire *create_luminaire(Vec3 position, Color intensity);
+    Primitive *create_luminaire(Primitive* primitive, Color intensity);
+    Primitive *create_rectangle(Vec3 n, Vec3 c, double w, double h, Material *material);
 };
 
 #endif

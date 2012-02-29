@@ -8,6 +8,10 @@ Sphere::Sphere(Vec3 center, double radius, Material *material) : Primitive(){
     this->material = material;
 } 
 
+Vec3 Sphere::get_position() const{
+    return this->center;
+}
+
 Intersection Sphere::intersect(const Ray& ray){
     Vec3 p = ray.origin;
     Vec3 v = ray.direction;

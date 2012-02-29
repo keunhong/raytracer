@@ -4,6 +4,7 @@
 #include "material.hpp"
 #include "vec3.hpp"
 #include "ray.hpp"
+#include "color.hpp"
 
 struct Intersection{
     Primitive *primitive;
@@ -27,15 +28,19 @@ class Primitive{
 
   protected:
     const Material *material;
-    bool m_is_luminaire;
+    Color m_exitance;
 
   public:
     Primitive();
+    Primitive(Material *m);
     virtual Intersection intersect(const Ray& ray) = 0;
     virtual const Material *get_material() const;
+    virtual Vec3 get_position() const = 0;
     int get_key() const;
     void set_luminaire(bool v);
+    void set_exitance(Color e);
     bool is_luminaire() const;
+    Color get_exitance() const;
 };
 
 #endif

@@ -126,8 +126,8 @@ Trace Camera::trace_ray(const Ray &ray, double rho, unsigned int depth) const{
     // Only process if intersected from outside of object
     if(intersection.result == 1){
         // Iterate through light sources for shadow rays
-        for(vector<Luminaire*>::const_iterator it = scene->luminaires.begin(); it != scene->luminaires.end(); ++it){
-            Luminaire *luminaire = *it;
+        for(vector<Primitive*>::const_iterator it = scene->luminaires.begin(); it != scene->luminaires.end(); ++it){
+            Primitive *luminaire = *it;
             Vec3 dir = luminaire->get_position() - intersection.position;
             
             // Shoot shadow ray
@@ -136,7 +136,7 @@ Trace Camera::trace_ray(const Ray &ray, double rho, unsigned int depth) const{
 
             if(!(shadow_intersection.result == 1 && !shadow_intersection.primitive->is_luminaire())){
                 // Diffuse
-                Color intensity = luminaire->get_intensity() * material->rho_d;
+                Color intensity = luminaire->get_exitance() * material->rho_d;
                 double ndotl = dir.normalize()*intersection.normal;
                 ndotl = std::max(0.0, ndotl);
                 local_intensity.add(intensity * ndotl);
@@ -147,7 +147,7 @@ Trace Camera::trace_ray(const Ray &ray, double rho, unsigned int depth) const{
                 Vec3 r = l - 2.0*l.dot(intersection.normal)*intersection.normal;
                 double vdotr = ray.direction.dot(r);
                 if(vdotr > 0){
-                    local_intensity.add(luminaire->get_intensity()*pow(vdotr,20)*material->rho_s);
+                    local_intensity.add(luminaire->get_exitance()*pow(vdotr,20)*material->rho_s);
                 }
             }
         }

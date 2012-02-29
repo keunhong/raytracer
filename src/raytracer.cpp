@@ -28,8 +28,11 @@ int main(int argc, char *argv[]){
     Material material6(Color::WHITE, 0, 0.5, 0.2, 0.8, 1.7);
 
     Scene scene;
-    scene.create_luminaire(Vec3(0, 0, -300), Color(0.5, 0.5, 0.5));
-    scene.create_luminaire(Vec3(0, 0, 50), Color(0.5, 0.5, 0.5));
+    //scene.create_luminaire(Vec3(0, 0, -300), Color(0.5, 0.5, 0.5));
+    //scene.create_luminaire(Vec3(0, 0, 50), Color(0.5, 0.5, 0.5));
+
+    Primitive *ceiling_lamp = scene.create_rectangle(Vec3(0,-1,0), Vec3(0,309,-250), 150.0, 100.0, &red_diffuse);
+    scene.create_luminaire(ceiling_lamp, Color(0.5, 0.5, 0.5));
 
     scene.create_plane(Vec3(0,1,0).normalize(), Vec3(0,-310,0), &white_diffuse); // floor
     scene.create_plane(Vec3(0,-1,0), Vec3(0,310,0), &white_diffuse); // ceiling

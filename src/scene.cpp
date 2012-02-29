@@ -9,9 +9,6 @@ Scene::~Scene(){
     for(vector<Primitive*>::iterator it = primitives.begin(); it != primitives.end(); ++it){
         delete *it;
     }
-    for(vector<Luminaire*>::iterator it = luminaires.begin(); it != luminaires.end(); ++it){
-        delete *it;
-    }
 }
 
 Sphere *Scene::create_sphere(Vec3 position, double radius, Material *material){
@@ -29,16 +26,20 @@ Plane *Scene::create_plane(Vec3 n, Vec3 r0, Material *material){
     return plane;
 }
 
-Luminaire *Scene::create_luminaire(Vec3 position, Color intensity){
-    Luminaire *luminaire = new Luminaire(position, intensity);
-    luminaires.push_back(luminaire);
+Primitive *Scene::create_luminaire(Primitive *primitive, Color intensity){
+    //Luminaire *luminaire = new Luminaire(position, intensity);
 
-    Sphere *luminaire_primitive = new Sphere(position, 10.0, NULL);
-    luminaire_primitive->set_luminaire(true);
-    primitives.push_back(luminaire_primitive);
+    primitive->set_exitance(intensity);
+
+    luminaires.push_back(primitive);
     
-    return luminaire;
+    return primitive;
 }
 
+Primitive *Scene::create_rectangle(Vec3 n, Vec3 c, double w, double h, Material *material){
+    Rectangle *rectangle = new Rectangle(n, c, w, h, material);
+    primitives.push_back(rectangle);
 
+    return rectangle;
+}
 
