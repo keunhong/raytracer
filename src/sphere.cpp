@@ -28,16 +28,21 @@ Intersection Sphere::intersect(const Ray& ray){
     double t2 = (-b+sqrt(det))/a;
 
     if(t2 > 0){
+        // Intersection from inside
         if(t1 < 0){
             Vec3 pos = p+t2*v;
             Vec3 normal = (pos - center).normalize();
             return Intersection(this, t2, normal, pos, -1);
-        }else{
+        }
+        // Intersection from outside
+        else{
             Vec3 pos = p+t1*v;
             Vec3 normal = (pos - center).normalize();
             return Intersection(this, t1, normal, pos, 1);
         }
-    }else{
+    }
+    // No intersection
+    else{
         return Intersection(this, t1, d.normalize(), p+t1*v, 0);
     }
 }

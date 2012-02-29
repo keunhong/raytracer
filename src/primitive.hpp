@@ -27,15 +27,15 @@ class Primitive{
 
   protected:
     const Material *material;
-    bool m_is_light;
+    bool m_is_luminaire;
 
   public:
     Primitive();
     virtual Intersection intersect(const Ray& ray) = 0;
     virtual const Material *get_material() const;
     int get_key() const;
-    void set_light(bool v);
-    bool is_light() const;
+    void set_luminaire(bool v);
+    bool is_luminaire() const;
 };
 
 #endif

@@ -99,7 +99,7 @@ void Camera::render(cv::Mat &im, int rays_per_pixel) const{
 #define MIN_ALBEDO 1.0/255.0
 Trace Camera::trace_ray(const Ray &ray, double rho, unsigned int depth) const{
     // Prune
-    if(rho < MIN_ALBEDO || depth > 2){
+    if(rho < MIN_ALBEDO){
         //cout << "Pruning trace tree since albedo is negligible." << rho << endl;
         return Trace(Color::BLACK, TRACE_EMPTY, NULL);
     }
@@ -111,11 +111,10 @@ Trace Camera::trace_ray(const Ray &ray, double rho, unsigned int depth) const{
         return Trace(Color::MAGENTA, TRACE_EMPTY, NULL);
     }
 
-    if(intersection.primitive->is_light()){
+    if(intersection.primitive->is_luminaire()){
         return Trace(Color::WHITE, TRACE_VALID, intersection.primitive);
     }
 
-    // Just some shortcuts
     const Material *material = intersection.primitive->get_material();
 
     /*
@@ -123,24 +122,21 @@ Trace Camera::trace_ray(const Ray &ray, double rho, unsigned int depth) const{
      */
     // Ambient
     Color local_intensity(0.1, 0.1, 0.1, 1.0);
-    //Color local_intensity;
 
+    // Only process if intersected from outside of object
     if(intersection.result == 1){
         // Iterate through light sources for shadow rays
-        for(vector<LightSource*>::const_iterator it = scene->lightsources.begin(); it != scene->lightsources.end(); ++it){
-            LightSource *lightsource = *it;
-            Vec3 dir = lightsource->get_position() - intersection.position;
+        for(vector<Luminaire*>::const_iterator it = scene->luminaires.begin(); it != scene->luminaires.end(); ++it){
+            Luminaire *luminaire = *it;
+            Vec3 dir = luminaire->get_position() - intersection.position;
             
             // Shoot shadow ray
             Ray shadow_ray(intersection.position, dir, intersection.primitive);
             Intersection shadow_intersection = find_nearest_intersection(shadow_ray); 
 
-            // If t < 0 then intersection is behind
-            // If t > 1 then light is closer
-            //if(shadow_intersection.t < 0 || shadow_intersection.t > 1){
-            if(!(shadow_intersection.result == 1 && !shadow_intersection.primitive->is_light())){
+            if(!(shadow_intersection.result == 1 && !shadow_intersection.primitive->is_luminaire())){
                 // Diffuse
-                Color intensity = lightsource->get_intensity() * material->rho_d;
+                Color intensity = luminaire->get_intensity() * material->rho_d;
                 double ndotl = dir.normalize()*intersection.normal;
                 ndotl = std::max(0.0, ndotl);
                 local_intensity.add(intensity * ndotl);
@@ -151,7 +147,7 @@ Trace Camera::trace_ray(const Ray &ray, double rho, unsigned int depth) const{
                 Vec3 r = l - 2.0*l.dot(intersection.normal)*intersection.normal;
                 double vdotr = ray.direction.dot(r);
                 if(vdotr > 0){
-                    local_intensity.add(lightsource->get_intensity()*pow(vdotr,20)*material->rho_s);
+                    local_intensity.add(luminaire->get_intensity()*pow(vdotr,20)*material->rho_s);
                 }
             }
         }
@@ -164,6 +160,7 @@ Trace Camera::trace_ray(const Ray &ray, double rho, unsigned int depth) const{
      */
     Color reflected_intensity;
 
+    // Only process if intersected from outside of object
     if(intersection.result == 1){
         // Reflected ray
         Vec3 r = ray.direction - (intersection.normal*(ray.direction.dot(intersection.normal))*2);
@@ -187,19 +184,23 @@ Trace Camera::trace_ray(const Ray &ray, double rho, unsigned int depth) const{
         n1 = 1.0;
         n2 = material->n;
     }else{
+        cout << "Derp" << endl;
         n1 = material->n;
         n2 = 1.0;
     }
     double cos_t2_sq = 1 - pow(n1/n2,2) * pow(1-cos_t1,2);
     if(cos_t2_sq > 0){
+        // cos(t)^2
         double cos_t2 = sqrt(cos_t2_sq);
+
+        // Direction for refracted ray
         Vec3 v_refract = (n1/n2)*ray.direction + (n1/n2*cos_t1 - cos_t2)*intersection.normal;
-        Primitive *ignore = (intersection.result == -1)?intersection.primitive:NULL;
+
+        // Create ray
         Ray transmitted_ray(intersection.position, v_refract, intersection.primitive);
 
         Trace transmitted_trace = trace_ray(transmitted_ray, rho * material->rho_t, depth+1);
-        if(intersection.result == -1 && intersection.primitive->get_key() == 6)
-            cout << intersection.t << " " << rho << " " << material->rho_t << endl;
+
         if(!transmitted_trace.empty){
             transmitted_intensity = transmitted_trace.color * material->rho_t;
         }
@@ -231,7 +232,7 @@ Intersection Camera::find_nearest_intersection(const Ray& ray) const{
         Primitive *primitive = *it;
 
         // We don't want to let an object intersect with itself
-        if(primitive == ray.source){
+        if(primitive == ray.source && ray.type != TRANSMITTED){
             continue;
         }
 

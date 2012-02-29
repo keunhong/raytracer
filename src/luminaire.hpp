@@ -4,13 +4,13 @@
 #include "vec3.hpp"
 #include "color.hpp"
 
-class LightSource{
+class Luminaire{
   private:
     Vec3 position;
     Color intensity;
   public:
-    LightSource();
-    LightSource(Vec3 position_, Color intensity_);
+    Luminaire();
+    Luminaire(Vec3 position_, Color intensity_);
     const Vec3& get_position();
     const Color& get_intensity();
 };

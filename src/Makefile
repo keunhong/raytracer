@@ -7,7 +7,7 @@ OPENCV_LDFLAGS = -lopencv_core -lopencv_highgui -lopencv_imgproc -lprofiler
 
 all: raytracer 
 
-raytracer: raytracer.o material.o color.o scene.o vec3.o lightsource.o sphere.o camera.o primitive.o plane.o ray.o
+raytracer: raytracer.o material.o color.o scene.o vec3.o luminaire.o sphere.o camera.o primitive.o plane.o ray.o
 	$(CC) -o $@  $^ $(LDFLAGS) $(OPENCV_LDFLAGS)\
 
 %.o : %.cpp

@@ -4,3 +4,5 @@ raytracer
 .hgignore
 .DS_Store
 *.out
+*.swp
+
