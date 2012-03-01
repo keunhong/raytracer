@@ -47,6 +47,6 @@ Intersection Sphere::intersect(const Ray& ray){
     }
     // No intersection
     else{
-        return Intersection(this, t1, d.normalize(), p+t1*v, 0);
+        return Intersection(this, t1, Vec3(0,0,0).normalize(), p+t1*v, 0);
     }
 }

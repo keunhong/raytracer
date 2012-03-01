@@ -184,7 +184,7 @@ Trace Camera::trace_ray(const Ray &ray, double rho, unsigned int depth) const{
     double n2 = material->n;
     if(intersection.result == 1){
     }else{
-        cout << "Derp" << endl;
+        cout << "D";
     }
     double cos_t2_sq = 1.0 - pow(n1/n2,2) * pow(1-cos_t1,2);
     if(cos_t2_sq > 0){
@@ -224,7 +224,7 @@ Trace Camera::trace_ray(const Ray &ray, double rho, unsigned int depth) const{
  * @param  exclude an primitive to exclude from the check
  * @return an intersection
  */
-#define MIN_DIST 0.000001
+#define MIN_T 0.0001
 Intersection Camera::find_nearest_intersection(const Ray& ray) const{
     double min_t = DBL_MAX;
     Intersection nearest_intersection;
@@ -232,20 +232,19 @@ Intersection Camera::find_nearest_intersection(const Ray& ray) const{
         Primitive *primitive = *it;
 
         // We don't want to let an object intersect with itself
-        if(primitive == ray.source && ray.type != TRANSMITTED){
-            continue;
-        }
+        //if(primitive == ray.source && ray.type != TRANSMITTED){
+        //    continue;
+        //}
 
         Intersection sect = primitive->intersect(ray);
 
         // Does not intersect
-        //if(sect.result <= 0){
-        if(sect.t <= MIN_DIST){
-        //if(sect.t <= 0){
+        if(sect.t <= MIN_T){
             continue;
         }
 
         // Otherwise there are two intersections
+        // Update closest intersection
         if(sect.t < min_t){
             min_t = sect.t;
             nearest_intersection = sect;

@@ -16,6 +16,10 @@ double Vec3::length() const{
     return sqrt(x*x+y*y+z*z);
 }
 
+Vec3 Vec3::cross(const Vec3& v) const{
+    return Vec3(y*v.z - z*v.y, z*v.x - x*v.z, x*v.y - y*v.x);
+}
+
 double Vec3::dot(const Vec3& r) const{
     return x*r.x + y*r.y + z*r.z;
 }
@@ -41,6 +45,10 @@ Vec3 operator+(double s, const Vec3& v){
 
 Vec3 Vec3::operator-(double s) const{
     return Vec3(x-s, y-s, z-s);
+}
+
+Vec3 Vec3::operator/(double s) const{
+    return Vec3(x/s, y/s, z/s);
 }
 
 

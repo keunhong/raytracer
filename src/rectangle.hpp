@@ -17,6 +17,12 @@ using std::vector;
 
 class Rectangle : public Primitive{
   private:
+    Vec3 a;
+    Vec3 b;
+    Vec3 p0;
+    Vec3 p1;
+    Vec3 p2;
+    Vec3 p3;
     Vec3 normal;
     Vec3 center;
     double width;
@@ -27,7 +33,7 @@ class Rectangle : public Primitive{
 
   public:
     Rectangle();
-    Rectangle(Vec3 n, Vec3 c, double w, double h, Material *m);
+    Rectangle(Vec3 p0, Vec3 a, Vec3 b, Material *m);
     virtual Intersection intersect(const Ray& ray);
     virtual Vec3 get_position() const;
     vector<Vec3>& get_samples();

@@ -6,6 +6,8 @@
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
 #include <cmath>
+#include <cstdlib>
+#include <ctime>
 
 #include <google/profiler.h>
 
@@ -13,7 +15,7 @@ using std::cout;
 using std::endl;
 
 int main(int argc, char *argv[]){
-    srand ( time(NULL) );
+    std::srand(std::time(NULL));
 
     cout << "RayTracer 2012" << endl; 
     cout << "Initializing Scene" << endl;
@@ -31,10 +33,10 @@ int main(int argc, char *argv[]){
     Material material6(Color::WHITE, 0, 0.5, 0.0, 1, 1.7);
 
     Scene scene;
-    //scene.create_luminaire(Vec3(0, 0, -300), Color(0.5, 0.5, 0.5));
-    //scene.create_luminaire(Vec3(0, 0, 50), Color(0.5, 0.5, 0.5));
+    //Primitive *orb_light = scene.create_sphere(Vec3(0, 0, -300), 40, &blue_specular);
+    //scene.create_luminaire(orb_light, Color(0.5, 0.5, 0.5));
 
-    Primitive *ceiling_lamp = scene.create_rectangle(Vec3(0,-1,0), Vec3(0,309,-350), 120.0, 120.0, &red_diffuse);
+    Primitive *ceiling_lamp = scene.create_rectangle(Vec3(-50,309,-300), Vec3(0, 0, -100), Vec3(100, 0, 0), &red_diffuse);
     scene.create_luminaire(ceiling_lamp, Color(0.5, 0.5, 0.5));
 
     scene.create_plane(Vec3(0,1,0).normalize(), Vec3(0,-310,0), &white_diffuse); // floor
@@ -53,7 +55,7 @@ int main(int argc, char *argv[]){
     Camera camera(&scene, Vec3(0, 0, 0), 640, 480, M_PI/3);
     cv::Mat result(cv::Size(camera.get_width(),camera.get_height()), CV_8UC3, cv::Scalar(0));
 
-    camera.render(result, 2);
+    camera.render(result, 1);
 
     cv::startWindowThread();
     cv::namedWindow("result", CV_WINDOW_NORMAL | CV_GUI_EXPANDED);

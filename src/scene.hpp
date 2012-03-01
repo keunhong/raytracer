@@ -27,7 +27,7 @@ class Scene{
     Sphere *create_sphere(Vec3 position, double radius, Material *material);
     Plane *create_plane(Vec3 n, Vec3 r0, Material *material);
     Primitive *create_luminaire(Primitive* primitive, Color intensity);
-    Primitive *create_rectangle(Vec3 n, Vec3 c, double w, double h, Material *material);
+    Primitive *create_rectangle(Vec3 p0, Vec3 a, Vec3 b, Material *material);
 };
 
 #endif

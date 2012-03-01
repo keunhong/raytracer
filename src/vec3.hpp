@@ -10,12 +10,14 @@ class Vec3{
     Vec3();
     Vec3(double x_, double y_, double z_);
     Vec3& normalize();
+    Vec3 cross(const Vec3& v) const;
     double dot(const Vec3& r) const;
     double operator*(const Vec3& r) const;
     double length() const;
     Vec3 operator*(double s) const;
     Vec3 operator+(double s) const;
     Vec3 operator-(double s) const;
+    Vec3 operator/(double s) const;
     friend Vec3 operator*(double s, const Vec3 &v);
     friend Vec3 operator+(double s, const Vec3 &v);
     friend Vec3 operator-(double s, const Vec3 &v);

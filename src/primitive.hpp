@@ -5,6 +5,7 @@
 #include "vec3.hpp"
 #include "ray.hpp"
 #include "color.hpp"
+#include <cstdlib>
 
 struct Intersection{
     Primitive *primitive;
