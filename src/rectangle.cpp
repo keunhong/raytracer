@@ -13,17 +13,20 @@ Rectangle::Rectangle(Vec3 p0, Vec3 a, Vec3 b, Material *m) : Primitive(m){
     this->center = p0 + (0.5*a) + (0.5*b);
     std::cout << "Rectangle " << get_key() << ":" << this->normal << " " << this->center <<  " " << p0 << " " << p1 << " " << p2  << " " << p3 << std::endl;
 
-    std::cout << "Generating samples..." << std::endl;
-    generate_samples();
+    generate_samples(1,1);
 };
 
-#define SAMPLES_A 10
-#define SAMPLES_B 10
-void Rectangle::generate_samples(){
-    Vec3 da = a/SAMPLES_A;
-    Vec3 db = b/SAMPLES_B;
-    for(int i = 0; i < SAMPLES_A; i++){
-        for(int j = 0; j < SAMPLES_B; j++){
+void Rectangle::generate_samples(int samples_a, int samples_b){
+    samples.clear();
+
+    if(samples_a <= 1 && samples_b <= 1){
+        //samples.push_back(center);
+    }
+
+    Vec3 da = a/samples_a;
+    Vec3 db = b/samples_b;
+    for(int i = 0; i < samples_a; i++){
+        for(int j = 0; j < samples_b; j++){
             Vec3 p = p0 + da*i + db*j;
 
             double randq = ((double)rand()/(double)RAND_MAX);

@@ -36,15 +36,16 @@ int main(int argc, char *argv[]){
     //Primitive *orb_light = scene.create_sphere(Vec3(0, 0, -300), 40, &blue_specular);
     //scene.create_luminaire(orb_light, Color(0.5, 0.5, 0.5));
 
-    Primitive *ceiling_lamp = scene.create_rectangle(Vec3(-100,309,-300), Vec3(0, 0, -200), Vec3(200, 0, 0), &red_diffuse);
+    Rectangle *ceiling_lamp = scene.create_rectangle(Vec3(-100,309,-300), Vec3(0, 0, -200), Vec3(200, 0, 0), &red_diffuse);
     scene.create_luminaire(ceiling_lamp, Color(0.5, 0.5, 0.5));
+    ceiling_lamp->generate_samples(8,8);
 
     scene.create_plane(Vec3(0,1,0).normalize(), Vec3(0,-310,0), &white_diffuse); // floor
     scene.create_plane(Vec3(0,-1,0), Vec3(0,310,0), &white_diffuse); // ceiling
     scene.create_plane(Vec3(0,0,1), Vec3(0,0,-680), &white_diffuse); // back wall
     scene.create_plane(Vec3(1,0,0), Vec3(-320,0,0), &red_diffuse); // left wall
     scene.create_plane(Vec3(-1,0,0), Vec3(320,0,0), &green_diffuse); // right wall
-    scene.create_plane(Vec3(0,0,1), Vec3(0,0,480), &white_diffuse); // front wall wall
+    scene.create_plane(Vec3(0,0,-1), Vec3(0,0,480), &white_diffuse); // front wall wall
 
     scene.create_sphere(Vec3(-120, -210+0.1, -460), 100, &blue_specular);
     scene.create_sphere(Vec3(120, -210+0.1, -360), 100, &material4);

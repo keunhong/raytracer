@@ -29,14 +29,13 @@ class Rectangle : public Primitive{
     double height;
     vector<Vec3> samples;
 
-    void generate_samples();
-
   public:
     Rectangle();
     Rectangle(Vec3 p0, Vec3 a, Vec3 b, Material *m);
     virtual Intersection intersect(const Ray& ray);
     virtual Vec3 get_position() const;
     virtual vector<Vec3> *get_samples();
+    void generate_samples(int samples_a, int samples_b);
 };
 
 #endif

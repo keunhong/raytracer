@@ -36,7 +36,7 @@ Primitive *Scene::create_luminaire(Primitive *primitive, Color intensity){
     return primitive;
 }
 
-Primitive *Scene::create_rectangle(Vec3 p0, Vec3 a, Vec3 b, Material *material){
+Rectangle *Scene::create_rectangle(Vec3 p0, Vec3 a, Vec3 b, Material *material){
     Rectangle *rectangle = new Rectangle(p0, a, b, material);
     primitives.push_back(rectangle);
 
