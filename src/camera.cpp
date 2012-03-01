@@ -155,7 +155,7 @@ Trace Camera::trace_ray(const Ray &ray, double rho, unsigned int depth) const{
                     ndotl = std::max(0.0, ndotl);
                     radiosity_gathered.add(intensity * ndotl);
                     radiosity_gathered = radiosity_gathered * material->color;
-                    std::cout << radiosity_gathered << std::endl;
+                    //std::cout << radiosity_gathered << std::endl;
 
                     // Phong specular
                     Vec3 l = dir.normalize();
