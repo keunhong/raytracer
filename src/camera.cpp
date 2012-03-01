@@ -24,18 +24,19 @@
 #include "camera.hpp"
 
 Camera::Camera(){}
-Camera::Camera(const Scene *scene_, Vec3 image_center, int width_, int height_, double fovx_) : width(width_), height(height_), fovx(fovx_){
+Camera::Camera(const Scene *scene_, Vec3 optical_center, int width_, int height_, double fovx_) : width(width_), height(height_), fovx(fovx_){
     fovy = height/width * fovx;
     focal_length = height / (2*std::tan(fovx/2));
 
-    focal_point.x = image_center.x;
-    focal_point.y = image_center.y;
-    focal_point.z = image_center.z + focal_length;
+    focal_point.x = optical_center.x;
+    focal_point.y = optical_center.y;
+    focal_point.z = optical_center.z - focal_length; // negative since -z is into the screen
+    this->optical_center = optical_center;
 
     scene = scene_;
 
     std::cout << "Camera: focal_point=" << focal_point 
-              << ", image_center=" << Vec3(focal_point.x, focal_point.y, focal_point.z-focal_length)
+              << ", optical_center=" << optical_center
               << ", res=" << width << "x" << height
               << ", f=" << focal_length
               << std::endl;
@@ -54,9 +55,10 @@ int Camera::get_height() const{
  * @param  im an opencv image
  */
 void Camera::render(cv::Mat &im, int rays_per_pixel) const{
+    // x loop
     for(int u = 0; u < width; u++){
-        if(u%10==0)
-            cout << (double)u/width*100 << "%" << endl;
+        if(u%10==0) cout << (double)u/width*100 << "%" << endl;
+        // y loop
         for(int v = 0; v < height; v++){
             Color color;
             double x = u - width/2;
@@ -65,10 +67,12 @@ void Camera::render(cv::Mat &im, int rays_per_pixel) const{
                 x += 1.0/rays_per_pixel;
                 y += 1.0/rays_per_pixel;
 
-                Vec3 image_point(focal_point.x+x, focal_point.y+y, focal_point.z-focal_length);
+                Vec3 image_point(optical_center.x+x, optical_center.y+y, optical_center.z);
 
+                //Vec3 ray_start = image_point;
+                //Vec3 ray_direction = image_point-focal_point;
                 Vec3 ray_start = image_point;
-                Vec3 ray_direction = image_point-focal_point;
+                Vec3 ray_direction = focal_point-image_point;
                 Ray ray(ray_start, ray_direction.normalize(), NULL);
                 Trace trace = trace_ray(ray, 1.0, 0);
                 color.add(trace.color);

@@ -3,7 +3,7 @@ CC      = g++ -Wall -g
 CFLAGS  = -c -I/opt/local/include
 LDFLAGS = -L/usr/lib -L/opt/local/lib
 
-OPENCV_LDFLAGS = -lopencv_core -lopencv_highgui -lopencv_imgproc -lprofiler
+OPENCV_LDFLAGS = -lopencv_core -lopencv_highgui -lopencv_imgproc
 
 all: raytracer 
 

@@ -29,6 +29,7 @@ class Camera{
     const Scene *scene;
 
     Vec3 focal_point;
+    Vec3 optical_center;
     Vec3 look_at;
     
     int width;
