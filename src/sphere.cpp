@@ -6,10 +6,17 @@ Sphere::Sphere(Vec3 center, double radius, Material *material) : Primitive(){
     this->center = center;
     this->radius = radius;
     this->material = material;
+    this->samples = vector<Vec3>();
+    this->samples.push_back(this->center);
 } 
 
 Vec3 Sphere::get_position() const{
     return this->center;
+}
+
+// TODO actually implement samples
+vector<Vec3> *Sphere::get_samples(){
+    return &this->samples;
 }
 
 Intersection Sphere::intersect(const Ray& ray){

@@ -36,7 +36,7 @@ class Rectangle : public Primitive{
     Rectangle(Vec3 p0, Vec3 a, Vec3 b, Material *m);
     virtual Intersection intersect(const Ray& ray);
     virtual Vec3 get_position() const;
-    vector<Vec3>& get_samples();
+    virtual vector<Vec3> *get_samples();
 };
 
 #endif

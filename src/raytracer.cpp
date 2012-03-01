@@ -36,7 +36,7 @@ int main(int argc, char *argv[]){
     //Primitive *orb_light = scene.create_sphere(Vec3(0, 0, -300), 40, &blue_specular);
     //scene.create_luminaire(orb_light, Color(0.5, 0.5, 0.5));
 
-    Primitive *ceiling_lamp = scene.create_rectangle(Vec3(-50,309,-300), Vec3(0, 0, -100), Vec3(100, 0, 0), &red_diffuse);
+    Primitive *ceiling_lamp = scene.create_rectangle(Vec3(-100,309,-300), Vec3(0, 0, -200), Vec3(200, 0, 0), &red_diffuse);
     scene.create_luminaire(ceiling_lamp, Color(0.5, 0.5, 0.5));
 
     scene.create_plane(Vec3(0,1,0).normalize(), Vec3(0,-310,0), &white_diffuse); // floor

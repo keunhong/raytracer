@@ -41,8 +41,8 @@ Vec3 Rectangle::get_position() const{
     return center;
 }
 
-vector<Vec3>& Rectangle::get_samples(){
-    return this->samples;
+vector<Vec3> *Rectangle::get_samples(){
+    return &this->samples;
 }
 
 Intersection Rectangle::intersect(const Ray& ray){

@@ -25,6 +25,13 @@ Color& Color::add(const Color& c){
     return *this;
 }
 
+
+
+
+
+
+// Vector operators
+//
 Color Color::operator+(const Color& right) const{
     return Color(r+right.r, g+right.g, b+right.b, 1.0);
 }
@@ -32,14 +39,66 @@ Color Color::operator+(const Color& right) const{
 Color Color::operator*(const Color& right) const{
     return Color(r*right.r, g*right.g, b*right.b, 1.0);
 }
+Color& Color::operator+=(const Color& c){
+    r += c.r;
+    g += c.g;
+    b += c.b;
+    return *this;
+}
+Color& Color::operator-=(const Color& c){
+    r /= c.r;
+    g /= c.g;
+    b /= c.b;
+    return *this;
+}
+Color& Color::operator*=(const Color& c){
+    r /= c.r;
+    g /= c.g;
+    b /= c.b;
+    return *this;
+}
+Color& Color::operator/=(const Color& c){
+    r /= c.r;
+    g /= c.g;
+    b /= c.b;
+    return *this;
+}
 
-
+// Scaloar operators
+//
 Color Color::operator*(double s) const{
     return Color(s*r, s*g, s*b, 1.0);
 }
 
 Color Color::operator/(double s) const{
     return Color(r/s, g/s, b/s, 1.0);
+}
+Color& Color::operator-=(double s){
+    r -= s;
+    g -=s;
+    b -=s;
+    return *this;
+}
+
+Color& Color::operator+=(double s){
+    r += s;
+    g +=s;
+    b +=s;
+    return *this;
+}
+
+Color& Color::operator*=(double s){
+    r *= s;
+    g *=s;
+    b *=s;
+    return *this;
+}
+
+Color& Color::operator/=(double s){
+    r /= s;
+    g /=s;
+    b /=s;
+    return *this;
 }
 
 bool Color::operator==(const Color& c) const{

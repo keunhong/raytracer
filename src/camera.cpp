@@ -128,29 +128,47 @@ Trace Camera::trace_ray(const Ray &ray, double rho, unsigned int depth) const{
         // Iterate through light sources for shadow rays
         for(vector<Primitive*>::const_iterator it = scene->luminaires.begin(); it != scene->luminaires.end(); ++it){
             Primitive *luminaire = *it;
-            Vec3 dir = luminaire->get_position() - intersection.position;
-            
-            // Shoot shadow ray
-            Ray shadow_ray(intersection.position, dir, intersection.primitive);
-            Intersection shadow_intersection = find_nearest_intersection(shadow_ray); 
+            vector<Vec3> *samples = luminaire->get_samples();
+            Color radiosity_gathered(0,0,0);
 
-            if(!(shadow_intersection.result == 1 && !shadow_intersection.primitive->is_luminaire())){
-                // Diffuse
-                Color intensity = luminaire->get_exitance() * material->rho_d;
-                double ndotl = dir.normalize()*intersection.normal;
-                ndotl = std::max(0.0, ndotl);
-                local_intensity.add(intensity * ndotl);
-                local_intensity = local_intensity * material->color;
+            for(vector<Vec3>::iterator jt = samples->begin(); jt != samples->end(); jt++){
+                Vec3 dir = *jt - intersection.position;
 
-                // Phone specular
-                Vec3 l = dir.normalize();
-                Vec3 r = l - 2.0*l.dot(intersection.normal)*intersection.normal;
-                double vdotr = ray.direction.dot(r);
-                if(vdotr > 0){
-                    local_intensity.add(luminaire->get_exitance()*pow(vdotr,20)*material->rho_s);
+                // Shoot shadow ray
+                Ray shadow_ray(intersection.position, dir, intersection.primitive);
+                Intersection shadow_intersection = find_nearest_intersection(shadow_ray); 
+
+                if(!(shadow_intersection.result == 1 && !shadow_intersection.primitive->is_luminaire())){
+                    // Foreshortening factors
+                    // Doesn't work because we're not using a physical model of light (just yet)
+                    // TODO: figure out later
+                    /*double cos_theta_i = (dir*intersection.normal)/(dir.length()*intersection.normal.length());
+                    double cos_theta_s = ((-dir)*shadow_intersection.normal)/((-dir).length()*shadow_intersection.normal.length());
+                    double dist = (shadow_intersection.position - intersection.position).length();
+                    double foreshortening_factor = cos_theta_i * cos_theta_s / (M_PI*dist*dist);*/
+
+                    //std::cout << cos_theta_i << " " << cos_theta_s << " " << dist  << " " << foreshortening_factor << std::endl;
+
+                    // Diffuse
+                    Color intensity = luminaire->get_exitance() * material->rho_d;
+                    double ndotl = dir.normalize()*intersection.normal;
+                    ndotl = std::max(0.0, ndotl);
+                    radiosity_gathered.add(intensity * ndotl);
+                    radiosity_gathered = radiosity_gathered * material->color;
+                    std::cout << radiosity_gathered << std::endl;
+
+                    // Phong specular
+                    Vec3 l = dir.normalize();
+                    Vec3 r = l - 2.0*l.dot(intersection.normal)*intersection.normal;
+                    double vdotr = ray.direction.dot(r);
+                    if(vdotr > 0){
+                        radiosity_gathered.add(luminaire->get_exitance()*pow(vdotr,20)*material->rho_s);
+                    }
                 }
-            }
-        }
+            } // sample iterator
+            radiosity_gathered /= samples->size();
+            local_intensity += radiosity_gathered;
+        } // luminaire iterator
     }
 
     // Add color

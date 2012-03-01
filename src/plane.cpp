@@ -5,10 +5,17 @@ Plane::Plane(Vec3 n, Vec3 r0_, Material *m) : Primitive(){
     this->normal = n;
     this->r0 = r0_;
     this->material = m;
+    this->samples = vector<Vec3>();
+    this->samples.push_back(r0_);
 };
 
 Vec3 Plane::get_position() const{
     return this->r0;
+}
+
+// TODO: actually implement samples
+vector<Vec3> *Plane::get_samples(){
+    return &this->samples;
 }
 
 Intersection Plane::intersect(const Ray& ray){

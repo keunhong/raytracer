@@ -6,6 +6,8 @@
 #include "ray.hpp"
 #include "color.hpp"
 #include <cstdlib>
+#include <vector>
+using std::vector;
 
 struct Intersection{
     Primitive *primitive;
@@ -42,6 +44,7 @@ class Primitive{
     void set_exitance(Color e);
     bool is_luminaire() const;
     Color get_exitance() const;
+    virtual vector<Vec3> *get_samples() = 0;
 };
 
 #endif

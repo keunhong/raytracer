@@ -13,8 +13,16 @@ class Color{
     
     Color operator+(const Color& right) const;
     Color operator*(const Color& right) const;
+    Color& operator+=(const Color& c);
+    Color& operator-=(const Color& c);
+    Color& operator*=(const Color& c);
+    Color& operator/=(const Color& c);
     Color operator*(double s) const;
     Color operator/(double s) const;
+    Color& operator+=(double s);
+    Color& operator-=(double s);
+    Color& operator*=(double s);
+    Color& operator/=(double s);
     bool operator==(const Color& c) const;
     bool operator!=(const Color& c) const;
 
