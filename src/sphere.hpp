@@ -20,6 +20,7 @@ class Sphere : public Primitive{
     virtual Intersection intersect(const Ray& ray);
     virtual Vec3 get_position() const;
     virtual vector<Vec3> *get_samples();
+    virtual void tick(double time_step);
 };
 
 

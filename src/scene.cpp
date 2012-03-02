@@ -11,6 +11,12 @@ Scene::~Scene(){
     }
 }
 
+void Scene::tick(double time_step){
+    for(vector<Primitive*>::iterator it = primitives.begin(); it != primitives.end(); ++it){
+        (*it)->tick(time_step);
+    }
+}
+
 Sphere *Scene::create_sphere(Vec3 position, double radius, Material *material){
     Sphere *sphere = new Sphere(position, radius, material);
     primitives.push_back(sphere);

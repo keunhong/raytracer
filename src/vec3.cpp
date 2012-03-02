@@ -66,6 +66,33 @@ Vec3 Vec3::operator-(const Vec3& r) const{
 Vec3 Vec3::operator-() const{
     return Vec3(-x, -y, -z);
 }
+Vec3& Vec3::operator+=(const Vec3& c){
+    x += c.x;
+    y += c.y;
+    z += c.z;
+    return *this;
+}
+Vec3& Vec3::operator-=(const Vec3& c){
+    x /= c.x;
+    y /= c.y;
+    z /= c.z;
+    return *this;
+}
+Vec3& Vec3::operator*=(const Vec3& c){
+    x /= c.x;
+    y /= c.y;
+    z /= c.z;
+    return *this;
+}
+Vec3& Vec3::operator/=(const Vec3& c){
+    x /= c.x;
+    y /= c.y;
+    z /= c.z;
+    return *this;
+}
+
+
+
 
 
 std::ostream& operator<<(std::ostream& os, const Vec3& v){

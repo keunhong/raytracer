@@ -28,6 +28,7 @@ class Scene{
     Plane *create_plane(Vec3 n, Vec3 r0, Material *material);
     Primitive *create_luminaire(Primitive* primitive, Color intensity);
     Rectangle *create_rectangle(Vec3 p0, Vec3 a, Vec3 b, Material *material);
+    void tick(double time_step);
 };
 
 #endif

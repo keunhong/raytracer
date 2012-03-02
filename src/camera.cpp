@@ -24,7 +24,7 @@
 #include "camera.hpp"
 
 Camera::Camera(){}
-Camera::Camera(const Scene *scene_, Vec3 optical_center, int width_, int height_, double fovx_) : width(width_), height(height_), fovx(fovx_){
+Camera::Camera(Scene *scene_, Vec3 optical_center, int width_, int height_, double fovx_) : width(width_), height(height_), fovx(fovx_){
     fovy = height/width * fovx;
     focal_length = height / (2*std::tan(fovx/2));
 
@@ -54,38 +54,67 @@ int Camera::get_height() const{
  *
  * @param  im an opencv image
  */
-void Camera::render(cv::Mat &im, int rays_per_pixel) const{
-    // x loop
-    for(int u = 0; u < width; u++){
-        if(u%10==0) cout << (double)u/width*100 << "%" << endl;
-        // y loop
-        for(int v = 0; v < height; v++){
-            Color color;
-            double x = u - width/2;
-            double y = v - height/2;
-            for(int i = 0; i < rays_per_pixel; i++){
-                x += 1.0/rays_per_pixel;
-                y += 1.0/rays_per_pixel;
+#define NUM_LENSE_SAMPLES 1.0
+void Camera::render(cv::Mat &im, int rays_per_pixel, double exposure, double time_step) const{
 
-                Vec3 image_point(optical_center.x+x, optical_center.y+y, optical_center.z);
+    double aperture_size = 6;
+    Vec3 lense_center(focal_point.x, focal_point.y, focal_point.z+focal_length*2.0);
 
-                //Vec3 ray_start = image_point;
-                //Vec3 ray_direction = image_point-focal_point;
-                Vec3 ray_start = image_point;
-                Vec3 ray_direction = focal_point-image_point;
-                Ray ray(ray_start, ray_direction.normalize(), NULL);
-                Trace trace = trace_ray(ray, 1.0, 0);
-                color.add(trace.color);
+    Color *image = new Color[height*width];
+
+    // time loop
+    for(double t = 0.0; t < exposure; t += time_step){
+        // x loop
+        for(int u = 0; u < width; u++){
+            if(u%10==0) cout << (double)(t/time_step*width+u)/(width*exposure/time_step)*100.0 << "%" << endl;
+            // y loop
+            for(int v = 0; v < height; v++){
+                Color color;
+                double x = u - width/2;
+                double y = v - height/2;
+                for(int ri = 0; ri < rays_per_pixel; ri++){
+                    x += 1.0/rays_per_pixel;
+                    y += 1.0/rays_per_pixel;
+
+                    Color lense_color;
+                    Vec3 image_point(focal_point.x+x, focal_point.y+y, focal_point.z);
+                    for(int i = 0; i < NUM_LENSE_SAMPLES; i++){
+                        for(int j = 0; j < NUM_LENSE_SAMPLES; j++){
+                            double lense_x = i*aperture_size/NUM_LENSE_SAMPLES - aperture_size/2;
+                            double lense_y = j*aperture_size/NUM_LENSE_SAMPLES - aperture_size/2;
+
+                            Vec3 lense_point(focal_point.x+lense_x, focal_point.y+lense_y, focal_point.z+focal_length*2.0);
+
+                            Vec3 ray_start = lense_point;
+                            Vec3 ray_direction = image_point-lense_point;
+                            Ray ray(ray_start, ray_direction.normalize(), NULL);
+                            Trace trace = trace_ray(ray, 1.0, 0);
+                            lense_color.add(trace.color);
+                        }
+                    }
+                    lense_color = lense_color / (NUM_LENSE_SAMPLES*NUM_LENSE_SAMPLES);
+                    color = color + lense_color;
+                }
+                
+                color = color/rays_per_pixel;
+
+                // Image will be inverted
+                image[v*width+u].b += color.b/(exposure/time_step);
+                image[v*width+u].g += color.g/(exposure/time_step);
+                image[v*width+u].r += color.r/(exposure/time_step);
             }
-            
-            color = color/rays_per_pixel;
+        }
+        scene->tick(time_step);
+    }
 
-            // Image will be inverted
-            im.at<cv::Vec3b>(height-1-v,u)[0] = std::min(255.0,color.b * 255);
-            im.at<cv::Vec3b>(height-1-v,u)[1] = std::min(255.0,color.g * 255);
-            im.at<cv::Vec3b>(height-1-v,u)[2] = std::min(255.0,color.r * 255);
+    for(int u = 0; u < width; u++){
+        for(int v = 0; v < height; v++){
+            im.at<cv::Vec3b>(height-1-v,u)[0] = std::min(255.0,image[v*width+u].b * 255);
+            im.at<cv::Vec3b>(height-1-v,u)[1] = std::min(255.0,image[v*width+u].g * 255);
+            im.at<cv::Vec3b>(height-1-v,u)[2] = std::min(255.0,image[v*width+u].r * 255);
         }
     }
+    delete [] image;
 }
 
 

@@ -26,7 +26,7 @@ struct Trace{
 };
 
 class Camera{
-    const Scene *scene;
+    Scene *scene;
 
     Vec3 focal_point;
     Vec3 optical_center;
@@ -40,8 +40,8 @@ class Camera{
 
   public:
     Camera();
-    Camera(const Scene *scene_, Vec3 image_center, int width_, int height_, double fovx_);
-    void render(cv::Mat &im, int rays_per_pixel) const;
+    Camera(Scene *scene_, Vec3 image_center, int width_, int height_, double fovx_);
+    void render(cv::Mat &im, int rays_per_pixel, double exposure, double time_step) const;
     int get_width() const;
     int get_height() const;
 

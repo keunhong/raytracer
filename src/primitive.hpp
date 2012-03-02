@@ -32,6 +32,7 @@ class Primitive{
   protected:
     const Material *material;
     Color m_exitance;
+    Vec3 velocity;
 
   public:
     Primitive();
@@ -45,6 +46,8 @@ class Primitive{
     bool is_luminaire() const;
     Color get_exitance() const;
     virtual vector<Vec3> *get_samples() = 0;
+    virtual void tick(double time_step);
+    void set_velocity(Vec3 v);
 };
 
 #endif

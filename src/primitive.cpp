@@ -32,3 +32,11 @@ bool Primitive::is_luminaire() const{
     //return m_is_luminaire;
     return m_exitance != Color::BLACK;
 }
+
+void Primitive::tick(double time_step){
+
+}
+
+void Primitive::set_velocity(Vec3 v){
+    velocity = v;
+}

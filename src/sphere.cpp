@@ -57,3 +57,7 @@ Intersection Sphere::intersect(const Ray& ray){
         return Intersection(this, t1, Vec3(0,0,0).normalize(), p+t1*v, 0);
     }
 }
+
+void Sphere::tick(double time_step){
+    center += velocity*time_step;
+}
