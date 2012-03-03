@@ -32,7 +32,7 @@ Intersection Sphere::intersect(const Ray& ray){
 
     // If there is no solution ray does not interesect sphere
     if(det < 0){
-        return Intersection(this, DBL_MAX, d.normalize(), Vec3(), 0);
+        return Intersection(this, DBL_MAX, d, Vec3(), 0);
     }
 
     double t1 = (-b-sqrt(det))/a;
