@@ -133,7 +133,6 @@ void Camera::render(cv::Mat &im, int rays_per_pixel, double exposure, double tim
 Trace Camera::trace_ray(const Ray &ray, double rho, unsigned int depth) const{
     // Prune
     if(rho < MIN_ALBEDO){
-        //cout << "Pruning trace tree since albedo is negligible." << rho << endl;
         return Trace(Color::MAGENTA, TRACE_EMPTY, NULL);
     }
 
@@ -173,23 +172,17 @@ Trace Camera::trace_ray(const Ray &ray, double rho, unsigned int depth) const{
 
                 if(!(shadow_intersection.result == 1 && !shadow_intersection.primitive->is_luminaire())){
                     // Foreshortening factors
-                    // Doesn't work because we're not using a physical model of light (just yet)
-                    // TODO: figure out later
                     double cos_theta_i = (dir*intersection.normal)/(dir.length()*intersection.normal.length());
                     double cos_theta_s = ((-dir)*shadow_intersection.normal)/((-dir).length()*shadow_intersection.normal.length());
                     double dist = (shadow_intersection.position - intersection.position).length();
                     double foreshortening_factor = cos_theta_i * cos_theta_s / (M_PI*dist*dist);
 
-                    //std::cout << cos_theta_i << " " << cos_theta_s << " " << dist  << " " << foreshortening_factor << std::endl;
-
                     // Diffuse
                     Color intensity = luminaire->get_exitance() * material->rho_d * foreshortening_factor;
-//                    std::cout << intensity << std::endl;
                     double ndotl = dir.normalize()*intersection.normal;
                     ndotl = std::max(0.0, ndotl);
                     radiosity_gathered.add(intensity * ndotl);
                     radiosity_gathered = radiosity_gathered * material->color;
-                    //std::cout << radiosity_gathered << std::endl;
 
                     // Phong specular
                     /*Vec3 l = dir.normalize();

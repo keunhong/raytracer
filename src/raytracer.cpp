@@ -68,7 +68,6 @@ int main(int argc, char *argv[]){
     //camera.render(result, 1, 4.0, 0.1);
     camera.render(result, 1, 1.0, 1.0);
 
-//    cv::flip(result, result, -1);
     cv::startWindowThread();
     cv::namedWindow("result", CV_WINDOW_NORMAL | CV_GUI_EXPANDED);
     while(true){
