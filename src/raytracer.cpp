@@ -33,11 +33,17 @@ int main(int argc, char *argv[]){
 
     Scene scene;
     //Primitive *orb_light = scene.create_sphere(Vec3(0, 0, -300), 40, &blue_specular);
-    //scene.create_luminaire(orb_light, Color(0.5, 0.5, 0.5));
+    //scene.create_luminaire(orb_light, Color(300000, 300000, 300000));
 
-    Rectangle *ceiling_lamp = scene.create_rectangle(Vec3(-150,309,-100), Vec3(0, 0, -300), Vec3(300, 0, 0), &red_diffuse);
-    scene.create_luminaire(ceiling_lamp, Color(0.5, 0.5, 0.5));
-    ceiling_lamp->generate_samples(10,10);
+    Rectangle *ceiling_lamp = scene.create_rectangle(Vec3(-150,310,-100), Vec3(0, 0, -300), Vec3(300, 0, 0), &red_diffuse);
+    scene.create_luminaire(ceiling_lamp, Color(250000, 250000, 250000));
+    ceiling_lamp->generate_samples(8,8);
+
+
+    Rectangle *ceiling_lamp2 = scene.create_rectangle(Vec3(-150,-310,-500), Vec3(0, 0, 100), Vec3(100, 0, 0), &red_diffuse);
+    scene.create_luminaire(ceiling_lamp2, Color(250000, 250000, 250000));
+    //ceiling_lamp->generate_samples(1,1);
+
 
     scene.create_plane(Vec3(0,1,0).normalize(), Vec3(0,-310,0), &white_diffuse); // floor
     scene.create_plane(Vec3(0,-1,0), Vec3(0,310,0), &white_diffuse); // ceiling
@@ -54,13 +60,13 @@ int main(int argc, char *argv[]){
     Primitive *red_ball = scene.create_sphere(Vec3(-100, -310+70.1, -200), 70, &red1);
     red_ball->set_velocity(Vec3(-10, 0, 15));
     Primitive *glass_ball = scene.create_sphere(Vec3(0.0, -260+0.1, 0.0), 50, &material6);
-    glass_ball->set_velocity(Vec3(10, 0, 0));
+    //glass_ball->set_velocity(Vec3(10, 0, 0));
 
     Camera camera(&scene, Vec3(0, 0, 500), 640, 480, M_PI/2);
     cv::Mat result(cv::Size(camera.get_width(),camera.get_height()), CV_8UC3, cv::Scalar(0));
 
     //camera.render(result, 1, 4.0, 0.1);
-    camera.render(result, 4, 1.0, 1.0);
+    camera.render(result, 1, 1.0, 1.0);
 
 //    cv::flip(result, result, -1);
     cv::startWindowThread();

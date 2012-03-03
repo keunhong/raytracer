@@ -57,8 +57,8 @@ int Camera::get_height() const{
 #define NUM_LENSE_SAMPLES 1.0
 void Camera::render(cv::Mat &im, int rays_per_pixel, double exposure, double time_step) const{
 
-    double aperture_size = 6;
-    Vec3 lense_center(focal_point.x, focal_point.y, focal_point.z+focal_length*2.0);
+    double aperture_size = 7;
+    Vec3 lense_center(focal_point.x, focal_point.y, focal_point.z+focal_length*0.5);
 
     Color *image = new Color[height*width];
 
@@ -175,15 +175,16 @@ Trace Camera::trace_ray(const Ray &ray, double rho, unsigned int depth) const{
                     // Foreshortening factors
                     // Doesn't work because we're not using a physical model of light (just yet)
                     // TODO: figure out later
-                    /*double cos_theta_i = (dir*intersection.normal)/(dir.length()*intersection.normal.length());
+                    double cos_theta_i = (dir*intersection.normal)/(dir.length()*intersection.normal.length());
                     double cos_theta_s = ((-dir)*shadow_intersection.normal)/((-dir).length()*shadow_intersection.normal.length());
                     double dist = (shadow_intersection.position - intersection.position).length();
-                    double foreshortening_factor = cos_theta_i * cos_theta_s / (M_PI*dist*dist);*/
+                    double foreshortening_factor = cos_theta_i * cos_theta_s / (M_PI*dist*dist);
 
                     //std::cout << cos_theta_i << " " << cos_theta_s << " " << dist  << " " << foreshortening_factor << std::endl;
 
                     // Diffuse
-                    Color intensity = luminaire->get_exitance() * material->rho_d;
+                    Color intensity = luminaire->get_exitance() * material->rho_d * foreshortening_factor;
+//                    std::cout << intensity << std::endl;
                     double ndotl = dir.normalize()*intersection.normal;
                     ndotl = std::max(0.0, ndotl);
                     radiosity_gathered.add(intensity * ndotl);
@@ -191,12 +192,12 @@ Trace Camera::trace_ray(const Ray &ray, double rho, unsigned int depth) const{
                     //std::cout << radiosity_gathered << std::endl;
 
                     // Phong specular
-                    Vec3 l = dir.normalize();
+                    /*Vec3 l = dir.normalize();
                     Vec3 r = l - 2.0*l.dot(intersection.normal)*intersection.normal;
                     double vdotr = ray.direction.dot(r);
                     if(vdotr > 0){
                         radiosity_gathered.add(luminaire->get_exitance()*pow(vdotr,20)*material->rho_s);
-                    }
+                    }*/
                 }
             } // sample iterator
             radiosity_gathered /= samples->size();
